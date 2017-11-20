@@ -8,16 +8,31 @@
 
 /* Begin PBXBuildFile section */
 		1C0DC3A1A60570E76FBBB7B0 /* Pods_ANSegmentScrollView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AA8E5763BCE9F80138AB2BE /* Pods_ANSegmentScrollView.framework */; };
+		B73A267B1FBD223C00B81504 /* ANMenuTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = B73A267A1FBD223C00B81504 /* ANMenuTitleView.m */; };
+		B73A267E1FBD2E3100B81504 /* ANTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B73A267D1FBD2E3100B81504 /* ANTestViewController.m */; };
+		B73A26811FBD2E5E00B81504 /* ANSegmentScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = B73A26801FBD2E5E00B81504 /* ANSegmentScrollView.m */; };
 		B74492D41FBBE1EE00D297BE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B74492D31FBBE1EE00D297BE /* AppDelegate.m */; };
 		B74492D71FBBE1EE00D297BE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B74492D61FBBE1EE00D297BE /* ViewController.m */; };
 		B74492DA1FBBE1EE00D297BE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B74492D81FBBE1EE00D297BE /* Main.storyboard */; };
 		B74492DC1FBBE1EE00D297BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B74492DB1FBBE1EE00D297BE /* Assets.xcassets */; };
 		B74492DF1FBBE1EE00D297BE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B74492DD1FBBE1EE00D297BE /* LaunchScreen.storyboard */; };
 		B74492E21FBBE1EE00D297BE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B74492E11FBBE1EE00D297BE /* main.m */; };
+		B744931D1FBC2B7200D297BE /* ANSegmentSuperTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = B744931C1FBC2B7200D297BE /* ANSegmentSuperTableView.m */; };
+		B74493201FBC3B3F00D297BE /* ANCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = B744931F1FBC3B3F00D297BE /* ANCollectionView.m */; };
+		B74493231FBC3B5400D297BE /* ANSegmentMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = B74493221FBC3B5400D297BE /* ANSegmentMenu.m */; };
+		B74493261FBC3DAB00D297BE /* ANSegmentScrollStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = B74493251FBC3DAB00D297BE /* ANSegmentScrollStyle.m */; };
+		B7EFC8571FBD747900424CB9 /* ANTestChildVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B7EFC8561FBD747900424CB9 /* ANTestChildVC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1AA8E5763BCE9F80138AB2BE /* Pods_ANSegmentScrollView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ANSegmentScrollView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B73A26791FBD223C00B81504 /* ANMenuTitleView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ANMenuTitleView.h; sourceTree = "<group>"; };
+		B73A267A1FBD223C00B81504 /* ANMenuTitleView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANMenuTitleView.m; sourceTree = "<group>"; };
+		B73A267C1FBD2E3100B81504 /* ANTestViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ANTestViewController.h; sourceTree = "<group>"; };
+		B73A267D1FBD2E3100B81504 /* ANTestViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANTestViewController.m; sourceTree = "<group>"; };
+		B73A267F1FBD2E5E00B81504 /* ANSegmentScrollView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ANSegmentScrollView.h; sourceTree = "<group>"; };
+		B73A26801FBD2E5E00B81504 /* ANSegmentScrollView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANSegmentScrollView.m; sourceTree = "<group>"; };
+		B73A26821FBD351900B81504 /* ANSegmentScrollViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ANSegmentScrollViewDelegate.h; sourceTree = "<group>"; };
 		B74492CF1FBBE1EE00D297BE /* ANSegmentScrollView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ANSegmentScrollView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B74492D21FBBE1EE00D297BE /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B74492D31FBBE1EE00D297BE /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -28,6 +43,16 @@
 		B74492DE1FBBE1EE00D297BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B74492E01FBBE1EE00D297BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B74492E11FBBE1EE00D297BE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B744931B1FBC2B7200D297BE /* ANSegmentSuperTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ANSegmentSuperTableView.h; sourceTree = "<group>"; };
+		B744931C1FBC2B7200D297BE /* ANSegmentSuperTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANSegmentSuperTableView.m; sourceTree = "<group>"; };
+		B744931E1FBC3B3F00D297BE /* ANCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ANCollectionView.h; sourceTree = "<group>"; };
+		B744931F1FBC3B3F00D297BE /* ANCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANCollectionView.m; sourceTree = "<group>"; };
+		B74493211FBC3B5400D297BE /* ANSegmentMenu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ANSegmentMenu.h; sourceTree = "<group>"; };
+		B74493221FBC3B5400D297BE /* ANSegmentMenu.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANSegmentMenu.m; sourceTree = "<group>"; };
+		B74493241FBC3DAB00D297BE /* ANSegmentScrollStyle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ANSegmentScrollStyle.h; sourceTree = "<group>"; };
+		B74493251FBC3DAB00D297BE /* ANSegmentScrollStyle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANSegmentScrollStyle.m; sourceTree = "<group>"; };
+		B7EFC8551FBD747900424CB9 /* ANTestChildVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ANTestChildVC.h; sourceTree = "<group>"; };
+		B7EFC8561FBD747900424CB9 /* ANTestChildVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANTestChildVC.m; sourceTree = "<group>"; };
 		BF666E70FC98438D863D067C /* Pods-ANSegmentScrollView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ANSegmentScrollView.release.xcconfig"; path = "Pods/Target Support Files/Pods-ANSegmentScrollView/Pods-ANSegmentScrollView.release.xcconfig"; sourceTree = "<group>"; };
 		D1AD0E1EB751E951BD5E2897 /* Pods-ANSegmentScrollView.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ANSegmentScrollView.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ANSegmentScrollView/Pods-ANSegmentScrollView.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -86,11 +111,36 @@
 				B74492D31FBBE1EE00D297BE /* AppDelegate.m */,
 				B74492D51FBBE1EE00D297BE /* ViewController.h */,
 				B74492D61FBBE1EE00D297BE /* ViewController.m */,
+				B73A267C1FBD2E3100B81504 /* ANTestViewController.h */,
+				B73A267D1FBD2E3100B81504 /* ANTestViewController.m */,
+				B7EFC8551FBD747900424CB9 /* ANTestChildVC.h */,
+				B7EFC8561FBD747900424CB9 /* ANTestChildVC.m */,
 				B74492D81FBBE1EE00D297BE /* Main.storyboard */,
+				B74492EE1FBBE93900D297BE /* ANSegmentScrollView */,
 				B74492DB1FBBE1EE00D297BE /* Assets.xcassets */,
 				B74492DD1FBBE1EE00D297BE /* LaunchScreen.storyboard */,
 				B74492E01FBBE1EE00D297BE /* Info.plist */,
 				B74492E11FBBE1EE00D297BE /* main.m */,
+			);
+			path = ANSegmentScrollView;
+			sourceTree = "<group>";
+		};
+		B74492EE1FBBE93900D297BE /* ANSegmentScrollView */ = {
+			isa = PBXGroup;
+			children = (
+				B74493241FBC3DAB00D297BE /* ANSegmentScrollStyle.h */,
+				B74493251FBC3DAB00D297BE /* ANSegmentScrollStyle.m */,
+				B73A26821FBD351900B81504 /* ANSegmentScrollViewDelegate.h */,
+				B73A267F1FBD2E5E00B81504 /* ANSegmentScrollView.h */,
+				B73A26801FBD2E5E00B81504 /* ANSegmentScrollView.m */,
+				B744931B1FBC2B7200D297BE /* ANSegmentSuperTableView.h */,
+				B744931C1FBC2B7200D297BE /* ANSegmentSuperTableView.m */,
+				B74493211FBC3B5400D297BE /* ANSegmentMenu.h */,
+				B74493221FBC3B5400D297BE /* ANSegmentMenu.m */,
+				B73A26791FBD223C00B81504 /* ANMenuTitleView.h */,
+				B73A267A1FBD223C00B81504 /* ANMenuTitleView.m */,
+				B744931E1FBC3B3F00D297BE /* ANCollectionView.h */,
+				B744931F1FBC3B3F00D297BE /* ANCollectionView.m */,
 			);
 			path = ANSegmentScrollView;
 			sourceTree = "<group>";
@@ -108,6 +158,7 @@
 				B74492CD1FBBE1EE00D297BE /* Resources */,
 				AF3F510F0D439ABC227DAE17 /* [CP] Embed Pods Frameworks */,
 				8236C50E0677123C3F6E7D3B /* [CP] Copy Pods Resources */,
+				B74493141FBC13A100D297BE /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -216,6 +267,19 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ANSegmentScrollView/Pods-ANSegmentScrollView-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		B74493141FBC13A100D297BE /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "KEYWORDS=\"TODO:|FIXME:|MARK:\"\nfind \"${SRCROOT}/$(PROJECT_NAME)/\" \\( -name \"*.h\" -or -name \"*.m\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($KEYWORDS).*\\$\" | perl -p -e \"s/($KEYWORDS)/ warning: \\$1/\"";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -223,8 +287,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B74493261FBC3DAB00D297BE /* ANSegmentScrollStyle.m in Sources */,
 				B74492D71FBBE1EE00D297BE /* ViewController.m in Sources */,
+				B73A26811FBD2E5E00B81504 /* ANSegmentScrollView.m in Sources */,
+				B7EFC8571FBD747900424CB9 /* ANTestChildVC.m in Sources */,
 				B74492E21FBBE1EE00D297BE /* main.m in Sources */,
+				B73A267B1FBD223C00B81504 /* ANMenuTitleView.m in Sources */,
+				B744931D1FBC2B7200D297BE /* ANSegmentSuperTableView.m in Sources */,
+				B74493201FBC3B3F00D297BE /* ANCollectionView.m in Sources */,
+				B73A267E1FBD2E3100B81504 /* ANTestViewController.m in Sources */,
+				B74493231FBC3B5400D297BE /* ANSegmentMenu.m in Sources */,
 				B74492D41FBBE1EE00D297BE /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -362,6 +434,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6ZN79TEE5B;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = ANSegmentScrollView/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -378,6 +452,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6ZN79TEE5B;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = ANSegmentScrollView/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
