@@ -54,7 +54,7 @@ ANSegmentScrollViewDelegate
     __weak __typeof(scrollView) weakScrollView = scrollView;
     scrollView.pullToRefreshTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         __strong __typeof(weakScrollView) strongScrollView = weakScrollView;
-        NSLog(@"%@ - %ld", [strongScrollView currentChildViewController], (long)[strongScrollView currentViewControllerIndex]);
+        NSLog(@"%@控制器开始刷新 - 控制器序号为%ld", [strongScrollView currentChildViewController], (long)[strongScrollView currentViewControllerIndex]);
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [strongScrollView.pullToRefreshTableView.mj_header endRefreshing];
         });

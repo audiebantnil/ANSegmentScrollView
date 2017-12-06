@@ -18,7 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationController.navigationBar.translucent = NO;
-    NSLog(@"%@", [NSValue valueWithCGRect:[UIApplication sharedApplication].statusBarFrame]);
+    NSLog(@"状态栏frame -> %@", [NSValue valueWithCGRect:[UIApplication sharedApplication].statusBarFrame]);
 }
 
 

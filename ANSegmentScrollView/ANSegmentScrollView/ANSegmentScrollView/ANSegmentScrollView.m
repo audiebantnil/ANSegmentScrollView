@@ -97,66 +97,28 @@ UIScrollViewDelegate
     return self;
 }
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [self.childVCsDict enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, UIViewController<ANSSChildVCsDelegate> * _Nonnull childVC, BOOL * _Nonnull stop) {
-        UIScrollView *scrollView = [childVC an_scrollViewInSegmentChildViewController];
-        if (scrollView) {
-            [scrollView removeObserver:self forKeyPath:@"contentOffset"];
-        }
-    }];
-#ifdef DEBUG
-    NSLog(@"%@ dealloc", [self class]);
-#endif
-}
-
-
-#pragma mark - Setup Child VCs Dictionary
-/** 获取子控制器 */
-- (UIViewController <ANSSChildVCsDelegate>*)childVCAtIndex:(NSInteger)index {
-    NSString *key = [NSString stringWithFormat:@"%ld", (long)self.currentIndex];
-    if ([self.childVCsDict valueForKey:key]) {
-        return [self.childVCsDict valueForKey:key];
-    } else {
-        return nil;
-    }
-}
-
-/** 添加子控制器 */
-- (void)addChildVC:(UIViewController <ANSSChildVCsDelegate>*)childVC atIndex:(NSInteger)index {
-    NSString *key = [NSString stringWithFormat:@"%ld", (long)self.currentIndex];
-    [self.childVCsDict setValue:childVC forKey:key];
-    if (self.parentVC) [self.parentVC addChildViewController:childVC];
-    UIScrollView *scrollView = [childVC an_scrollViewInSegmentChildViewController];
-    if (scrollView) {
-        [scrollView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
-    }
-}
-
-/** 移除子控制器 */
-- (void)removeChildVC:(UIViewController <ANSSChildVCsDelegate>*)childVC withKey:(NSString *)key {
-    if ([self.childVCsDict valueForKey:key]) {
-        UIScrollView *scrollView = [childVC an_scrollViewInSegmentChildViewController];
-        if (scrollView) {
-            [scrollView removeObserver:self forKeyPath:@"contentOffset"];
-        }
-        [self.childVCsDict removeObjectForKey:key];
-        [childVC willMoveToParentViewController:nil];
-        [childVC.view removeFromSuperview];
-        [childVC removeFromParentViewController];
-    }
-}
-
-/** 接收内存警告通知 */
 - (void)receiveMemoryWarningHander:(NSNotificationCenter *)noti {
     __weak __typeof(self) weakSelf = self;
     [self.childVCsDict enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, UIViewController<ANSSChildVCsDelegate> * _Nonnull childVC, BOOL * _Nonnull stop) {
         __strong __typeof(weakSelf) strongSelf = weakSelf;
         if (childVC != strongSelf.currentChildVC) {
-            [strongSelf removeChildVC:childVC withKey:key];
+            [strongSelf vc_removeChildVC:childVC withKey:key];
         }
     }];
 }
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    if (self.currentChildScrollView) {
+        @try {
+            [self.currentChildScrollView removeObserver:self forKeyPath:@"contentOffset"];
+        } @catch (NSException * __unused exception) {}
+    }
+#ifdef DEBUG
+    NSLog(@"%@ dealloc", [self class]);
+#endif
+}
+
 
 
 #pragma mark - Setup Sync Scroll
@@ -177,10 +139,9 @@ UIScrollViewDelegate
     self.oldIndex = self.currentIndex;
     NSInteger currentIndex = offset.x / self.collectionView.bounds.size.width;
     self.currentIndex = currentIndex;
-    self.currentChildVC = [self childVCAtIndex:currentIndex];
-    if (self.currentChildScrollView) {
-        [self setupChildScrollViewContentOffset];
-    }
+    self.currentChildVC = [self vc_childVCAtIndex:currentIndex];
+    self.currentChildScrollView = [self.currentChildVC an_scrollViewInSegmentChildViewController];
+    [self setupChildScrollViewContentOffset];
     if (animated) {
         NSInteger page = fabs(offset.x - self.collectionView.contentOffset.x) / self.collectionView.bounds.size.width;
         if (page >= 2) { // 需要滚动两页以上的时候, 跳过中间页的动画
@@ -228,6 +189,7 @@ UIScrollViewDelegate
     self.forbidTouchToAdjustPosition = NO;
 }
 
+/** 纵向同步/横向同步 -> ScrollView滑动监听 */
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView == self.tableView) { // 纵向滑动处理
         [self setupSuperTableViewContentOffset];
@@ -253,10 +215,9 @@ UIScrollViewDelegate
             return;
         }
         self.oldOffsetX = scrollView.contentOffset.x;
-        self.currentChildVC = [self childVCAtIndex:self.currentIndex];
-        if (self.currentChildScrollView) {
-            [self setupChildScrollViewContentOffset];
-        }
+        self.currentChildVC = [self vc_childVCAtIndex:self.currentIndex];
+        self.currentChildScrollView = [self.currentChildVC an_scrollViewInSegmentChildViewController];
+        [self setupChildScrollViewContentOffset];
         if (self.segmentMenu) { // 根据进度调整
             [self.segmentMenu adjustUIWithProgress:progress fromIndex:self.oldIndex toIndex:self.currentIndex];
         }
@@ -301,7 +262,7 @@ UIScrollViewDelegate
     if (self.parentVC == nil) return; // 父控制器为nil
     // 取子控制器
     self.currentIndex = indexPath.row;
-    self.currentChildVC = [self childVCAtIndex:self.currentIndex];
+    self.currentChildVC = [self vc_childVCAtIndex:self.currentIndex];
     BOOL isFirstLoaded = self.currentChildVC == nil;
     if (self.delegate && [self.delegate respondsToSelector:@selector(an_childVCFromReusableVC:forIndex:)]) {
         if (isFirstLoaded) {
@@ -311,7 +272,7 @@ UIScrollViewDelegate
             } else if ([self.currentChildVC respondsToSelector:@selector(an_scrollViewInSegmentChildViewController)] == NO) {
                 NSAssert(NO, @"子控制器必须实现必要的代理方法");
             }
-            [self addChildVC:self.currentChildVC atIndex:self.currentIndex];
+            [self vc_addChildVC:self.currentChildVC atIndex:self.currentIndex];
         } else {
             [self.delegate an_childVCFromReusableVC:self.currentChildVC forIndex:indexPath.row];
         }
@@ -328,99 +289,21 @@ UIScrollViewDelegate
     self.currentChildVC.view.frame = cell.contentView.bounds;
     [cell.contentView addSubview:self.currentChildVC.view];
     [self.currentChildVC didMoveToParentViewController:self.parentVC];
+    self.currentChildScrollView = [self.currentChildVC an_scrollViewInSegmentChildViewController];
     // 调用 currentIndex 控制器生命周期方法
-    [self childViewWillAppearAtIndex:self.currentIndex];
-    [self childViewDidAppearAtIndex:self.currentIndex];
+    [self _childViewWillAppearAtIndex:self.currentIndex];
+    [self _childViewDidAppearAtIndex:self.currentIndex];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     if (self.oldIndex != indexPath.item) { // 滑动切换了页面但并未松手 (在 willDisplayCell 调用的Appear方法现在需要Disappear)
-        [self childViewWillDisappearAtIndex:self.currentIndex];
-        [self childViewDidDisappearAtIndex:self.currentIndex];
+        [self _childViewWillDisappearAtIndex:self.currentIndex];
+        [self _childViewDidDisappearAtIndex:self.currentIndex];
         return;
     }
     // 调用 oldIndex 控制器生命周期方法 (向左滑动完成/向右滑动完成/点击菜单栏切换时 self.oldIndex == indexPath.item)
-    [self childViewWillDisappearAtIndex:self.oldIndex];
-    [self childViewDidDisappearAtIndex:self.oldIndex];
-}
-
-
-
-#pragma mark - Life Circle
-- (void)childViewWillAppearAtIndex:(NSInteger)index {
-    NSString *key = [NSString stringWithFormat:@"%ld", (long)index];
-    UIViewController<ANSSChildVCsDelegate> *controller = nil;
-    if ([self.childVCsDict valueForKey:key]) {
-        controller = [self.childVCsDict valueForKey:key];
-    }
-    if (controller == nil) return;
-    // 子控制器系统生命周期方法调用
-    if (self.needManageLifeCycle) {
-        [controller beginAppearanceTransition:YES animated:NO];
-    } else if ([controller respondsToSelector:@selector(an_viewWillAppearAtIndex:)]) {
-        [controller an_viewWillAppearAtIndex:index];
-    }
-    // 本视图代理的代理方法调用
-    if (self.delegate && [self.delegate respondsToSelector:@selector(parentVC:childVC:willAppearAtIndex:)]) {
-        [self.delegate parentVC:self.parentVC childVC:controller willAppearAtIndex:index];
-    }
-}
-
-- (void)childViewDidAppearAtIndex:(NSInteger)index {
-    NSString *key = [NSString stringWithFormat:@"%ld", (long)index];
-    UIViewController<ANSSChildVCsDelegate> *controller = nil;
-    if ([self.childVCsDict valueForKey:key]) {
-        controller = [self.childVCsDict valueForKey:key];
-    }
-    if (controller == nil) return;
-    // 子控制器系统生命周期方法调用
-    if (self.needManageLifeCycle) {
-        [controller endAppearanceTransition];
-    } else if ([controller respondsToSelector:@selector(an_viewDidAppearAtIndex:)]) {
-        [controller an_viewDidAppearAtIndex:index];
-    }
-    // 本视图代理的代理方法调用
-    if (self.delegate && [self.delegate respondsToSelector:@selector(parentVC:childVC:didAppearAtIndex:)]) {
-        [self.delegate parentVC:self.parentVC childVC:controller didAppearAtIndex:index];
-    }
-}
-
-- (void)childViewWillDisappearAtIndex:(NSInteger)index {
-    NSString *key = [NSString stringWithFormat:@"%ld", (long)index];
-    UIViewController<ANSSChildVCsDelegate> *controller = nil;
-    if ([self.childVCsDict valueForKey:key]) {
-        controller = [self.childVCsDict valueForKey:key];
-    }
-    if (controller == nil) return;
-    // 子控制器系统生命周期方法调用
-    if (self.needManageLifeCycle) {
-        [controller beginAppearanceTransition:NO animated:NO];
-    } else if ([controller respondsToSelector:@selector(an_viewWillDisappearAtIndex:)]) {
-        [controller an_viewWillDisappearAtIndex:index];
-    }
-    // 本视图代理的代理方法调用
-    if (self.delegate && [self.delegate respondsToSelector:@selector(parentVC:childVC:willDisappearAtIndex:)]) {
-        [self.delegate parentVC:self.parentVC childVC:controller willDisappearAtIndex:index];
-    }
-}
-
-- (void)childViewDidDisappearAtIndex:(NSInteger)index {
-    NSString *key = [NSString stringWithFormat:@"%ld", (long)index];
-    UIViewController<ANSSChildVCsDelegate> *controller = nil;
-    if ([self.childVCsDict valueForKey:key]) {
-        controller = [self.childVCsDict valueForKey:key];
-    }
-    if (controller == nil) return;
-    // 子控制器系统生命周期方法调用
-    if (self.needManageLifeCycle) {
-        [controller endAppearanceTransition];
-    } else if ([controller respondsToSelector:@selector(an_viewDidDisappearAtIndex:)]) {
-        [controller an_viewDidDisappearAtIndex:index];
-    }
-    // 本视图代理的代理方法调用
-    if (self.delegate && [self.delegate respondsToSelector:@selector(parentVC:childVC:didDisappearAtIndex:)]) {
-        [self.delegate parentVC:self.parentVC childVC:controller didDisappearAtIndex:index];
-    }
+    [self _childViewWillDisappearAtIndex:self.oldIndex];
+    [self _childViewDidDisappearAtIndex:self.oldIndex];
 }
 
 
@@ -447,22 +330,136 @@ UIScrollViewDelegate
 
 
 
-#pragma mark - Setters
-- (void)setCurrentChildVC:(UIViewController<ANSSChildVCsDelegate> *)currentChildVC {
-    _currentChildVC = currentChildVC;
-    if (_currentChildVC) {
-        self.currentChildScrollView = [_currentChildVC an_scrollViewInSegmentChildViewController];
+#pragma mark - Life Circle
+- (void)_childViewWillAppearAtIndex:(NSInteger)index {
+    NSString *key = [NSString stringWithFormat:@"%ld", (long)index];
+    UIViewController<ANSSChildVCsDelegate> *controller = nil;
+    if ([self.childVCsDict valueForKey:key]) {
+        controller = [self.childVCsDict valueForKey:key];
+    }
+    if (controller == nil) return;
+    // 子控制器系统生命周期方法调用
+    if (self.needManageLifeCycle) {
+        [controller beginAppearanceTransition:YES animated:NO];
+    } else if ([controller respondsToSelector:@selector(an_viewWillAppearAtIndex:)]) {
+        [controller an_viewWillAppearAtIndex:index];
+    }
+    // 本视图代理的代理方法调用
+    if (self.delegate && [self.delegate respondsToSelector:@selector(parentVC:childVC:willAppearAtIndex:)]) {
+        [self.delegate parentVC:self.parentVC childVC:controller willAppearAtIndex:index];
+    }
+}
+
+- (void)_childViewDidAppearAtIndex:(NSInteger)index {
+    NSString *key = [NSString stringWithFormat:@"%ld", (long)index];
+    UIViewController<ANSSChildVCsDelegate> *controller = nil;
+    if ([self.childVCsDict valueForKey:key]) {
+        controller = [self.childVCsDict valueForKey:key];
+    }
+    if (controller == nil) return;
+    // 子控制器系统生命周期方法调用
+    if (self.needManageLifeCycle) {
+        [controller endAppearanceTransition];
+    } else if ([controller respondsToSelector:@selector(an_viewDidAppearAtIndex:)]) {
+        [controller an_viewDidAppearAtIndex:index];
+    }
+    // 本视图代理的代理方法调用
+    if (self.delegate && [self.delegate respondsToSelector:@selector(parentVC:childVC:didAppearAtIndex:)]) {
+        [self.delegate parentVC:self.parentVC childVC:controller didAppearAtIndex:index];
+    }
+    // 添加观察者
+    UIScrollView *scrollView = [controller an_scrollViewInSegmentChildViewController];
+    if (scrollView) {
+        [scrollView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
+    }
+}
+
+- (void)_childViewWillDisappearAtIndex:(NSInteger)index {
+    NSString *key = [NSString stringWithFormat:@"%ld", (long)index];
+    UIViewController<ANSSChildVCsDelegate> *controller = nil;
+    if ([self.childVCsDict valueForKey:key]) {
+        controller = [self.childVCsDict valueForKey:key];
+    }
+    if (controller == nil) return;
+    // 子控制器系统生命周期方法调用
+    if (self.needManageLifeCycle) {
+        [controller beginAppearanceTransition:NO animated:NO];
+    } else if ([controller respondsToSelector:@selector(an_viewWillDisappearAtIndex:)]) {
+        [controller an_viewWillDisappearAtIndex:index];
+    }
+    // 本视图代理的代理方法调用
+    if (self.delegate && [self.delegate respondsToSelector:@selector(parentVC:childVC:willDisappearAtIndex:)]) {
+        [self.delegate parentVC:self.parentVC childVC:controller willDisappearAtIndex:index];
+    }
+}
+
+- (void)_childViewDidDisappearAtIndex:(NSInteger)index {
+    NSString *key = [NSString stringWithFormat:@"%ld", (long)index];
+    UIViewController<ANSSChildVCsDelegate> *controller = nil;
+    if ([self.childVCsDict valueForKey:key]) {
+        controller = [self.childVCsDict valueForKey:key];
+    }
+    if (controller == nil) return;
+    // 子控制器系统生命周期方法调用
+    if (self.needManageLifeCycle) {
+        [controller endAppearanceTransition];
+    } else if ([controller respondsToSelector:@selector(an_viewDidDisappearAtIndex:)]) {
+        [controller an_viewDidDisappearAtIndex:index];
+    }
+    // 本视图代理的代理方法调用
+    if (self.delegate && [self.delegate respondsToSelector:@selector(parentVC:childVC:didDisappearAtIndex:)]) {
+        [self.delegate parentVC:self.parentVC childVC:controller didDisappearAtIndex:index];
+    }
+    // 移除观察者
+    UIScrollView *scrollView = [controller an_scrollViewInSegmentChildViewController];
+    if (scrollView) {
+        @try {
+            [scrollView removeObserver:self forKeyPath:@"contentOffset"];
+        } @catch (NSException * __unused exception) {}
     }
 }
 
 
+
+#pragma mark - Setup Child VCs Dictionary
+/** 获取子控制器 */
+- (UIViewController <ANSSChildVCsDelegate>*)vc_childVCAtIndex:(NSInteger)index {
+    NSString *key = [NSString stringWithFormat:@"%ld", (long)self.currentIndex];
+    if ([self.childVCsDict valueForKey:key]) {
+        return [self.childVCsDict valueForKey:key];
+    } else {
+        return nil;
+    }
+}
+
+/** 添加子控制器 */
+- (void)vc_addChildVC:(UIViewController <ANSSChildVCsDelegate>*)childVC atIndex:(NSInteger)index {
+    NSString *key = [NSString stringWithFormat:@"%ld", (long)self.currentIndex];
+    [self.childVCsDict setValue:childVC forKey:key];
+    if (self.parentVC) [self.parentVC addChildViewController:childVC];
+}
+
+/** 移除子控制器 */
+- (void)vc_removeChildVC:(UIViewController <ANSSChildVCsDelegate>*)childVC withKey:(NSString *)key {
+    if ([self.childVCsDict valueForKey:key]) {
+        [self.childVCsDict removeObjectForKey:key];
+        [childVC willMoveToParentViewController:nil];
+        [childVC.view removeFromSuperview];
+        [childVC removeFromParentViewController];
+    }
+}
+
+
+
 #pragma mark - Getters
+/** 整体风格 */
 - (ANSegmentScrollStyle *)style {
     if (_style) return _style;
     _style = [[ANSegmentScrollStyle alloc] init];
     return _style;
 }
 
+/** 纵向滑动父视图 */
 - (ANSegmentSuperTableView *)tableView {
     if (_tableView) return _tableView;
     _tableView = [[ANSegmentSuperTableView alloc] initWithFrame:self.bounds style:UITableViewStylePlain];
@@ -481,6 +478,7 @@ UIScrollViewDelegate
     return _tableView;
 }
 
+/** 横向滑动视图 */
 - (ANCollectionView *)collectionView {
     if (_collectionView) return _collectionView;
     // 设置frame
@@ -514,6 +512,7 @@ UIScrollViewDelegate
     return _collectionView;
 }
 
+/** 存储子控制器字典 */
 - (NSMutableDictionary<NSString *, UIViewController<ANSSChildVCsDelegate> *>*)childVCsDict {
     if (_childVCsDict) return _childVCsDict;
     _childVCsDict = [NSMutableDictionary dictionaryWithCapacity:self.itemsCount];

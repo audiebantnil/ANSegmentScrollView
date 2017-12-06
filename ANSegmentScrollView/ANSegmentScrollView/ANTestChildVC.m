@@ -23,28 +23,28 @@ UITableViewDelegate
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view addSubview:self.tableView];
-    NSLog(@"%s -> %ld", __FUNCTION__, (long)self.index);
+//    NSLog(@"%s -> %ld", __FUNCTION__, (long)self.index);
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    NSLog(@"%s -> %ld", __FUNCTION__, (long)self.index);
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    NSLog(@"%s -> %ld", __FUNCTION__, (long)self.index);
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    NSLog(@"%s -> %ld", __FUNCTION__, (long)self.index);
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    NSLog(@"%s -> %ld", __FUNCTION__, (long)self.index);
-}
+//- (void)viewWillAppear:(BOOL)animated {
+//    [super viewWillAppear:animated];
+//    NSLog(@"%s -> %ld", __FUNCTION__, (long)self.index);
+//}
+//
+//- (void)viewDidAppear:(BOOL)animated {
+//    [super viewDidAppear:animated];
+//    NSLog(@"%s -> %ld", __FUNCTION__, (long)self.index);
+//}
+//
+//- (void)viewWillDisappear:(BOOL)animated {
+//    [super viewWillDisappear:animated];
+//    NSLog(@"%s -> %ld", __FUNCTION__, (long)self.index);
+//}
+//
+//- (void)viewDidDisappear:(BOOL)animated {
+//    [super viewDidDisappear:animated];
+//    NSLog(@"%s -> %ld", __FUNCTION__, (long)self.index);
+//}
 
 //- (void)an_viewWillAppearAtIndex:(NSInteger)index {
 //    NSLog(@"%s -> %ld - %ld", __FUNCTION__, (long)self.index, (long)index);

@@ -42,7 +42,6 @@
  */
 - (UIViewController<ANSSChildVCsDelegate> *)an_childVCFromReusableVC:(UIViewController<ANSSChildVCsDelegate> *)reusableVC forIndex:(NSInteger)index;
 
-
 @optional
 
 /**
