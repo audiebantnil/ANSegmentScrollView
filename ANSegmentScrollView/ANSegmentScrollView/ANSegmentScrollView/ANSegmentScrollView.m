@@ -164,6 +164,7 @@ UIScrollViewDelegate
 /** 根据父控制器滑动偏移调整子控制器滑动偏移 */
 - (void)setupChildScrollViewContentOffset {
     if (self.currentChildScrollView == nil) return;
+    if (self.tableView.contentOffset.y <= 0 && self.style.refreshPosition == PullToRefreshPositionChildTop) return;
     if (self.tableView.contentOffset.y < self.headerHeight) {
         self.currentChildScrollView.contentOffset = CGPointZero;
         self.currentChildScrollView.showsVerticalScrollIndicator = NO;
@@ -472,7 +473,7 @@ UIScrollViewDelegate
         self.headerView.frame = CGRectMake(0, 0, self.bounds.size.width, self.headerHeight);
         _tableView.tableHeaderView = self.headerView;
     }
-    if (self.style.refreshPosition != PullToRefreshPositionChildTop) {
+    if (self.style.refreshPosition != PullToRefreshPositionParentTop) {
         _tableView.bounces = NO;
     }
     return _tableView;

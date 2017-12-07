@@ -25,8 +25,8 @@ typedef NS_ENUM(NSInteger, TitleImagePosition) {
 /**
  下拉刷新控件位置
  - PullToRefreshPositionNone: 不展示
- - PullToRefreshPositionSuperTop: 父视图顶部 (位于 Segment Menu 上部)
- - PullToRefreshPositionChildTop: 子视图顶部 (位于 Segment Menu 下部)
+ - PullToRefreshPositionSuperTop: 父视图顶部 (位于 Segment Menu 上部, 可设置ANSegmentScrollView对象的pullToRefreshTableView刷新)
+ - PullToRefreshPositionChildTop: 子视图顶部 (位于 Segment Menu 下部, 可设置子视图中的滑动视图刷新)
  */
 typedef NS_ENUM(NSInteger, PullToRefreshPosition) {
     PullToRefreshPositionNone,
@@ -44,10 +44,10 @@ typedef void(^ExtraButtonClickBlock)(UIButton *extraButton);
 
 @interface ANSegmentScrollStyle : NSObject
 
-/** 内容view是否能滑动 默认为YES */
+/** contentView是否能滑动 默认为YES */
 @property (assign, nonatomic, getter=isScrollContentView) BOOL scrollContentView;
 
-/** 点击标题切换的时候 内容view是否会有动画 即使是设置为YES当跳过两页以上的时候都没有动画 默认为YES */
+/** 点击title切换的时候 contentView是否会有动画 默认为YES(跳过两页以上的都没有动画) */
 @property (assign, nonatomic, getter=isAnimatedContentViewWhenTitleClicked) BOOL animatedContentViewWhenTitleClicked;
 
 /** segmentView是否有弹性 默认为YES */
@@ -56,13 +56,13 @@ typedef void(^ExtraButtonClickBlock)(UIButton *extraButton);
 /** contentView是否有弹性 默认为YES */
 @property (assign, nonatomic, getter=isContentViewBounces) BOOL contentViewBounces;
 
-/** 是否颜色渐变 默认为NO */
+/** title是否颜色渐变 默认为NO */
 @property (assign, nonatomic, getter=isGradualChangeTitleColor) BOOL gradualChangeTitleColor;
 
-/** 当设置scrollTitle=NO时, 设置此属性为YES会适应文字宽度而不是同TitleView的宽度一样 默认为NO */
+/** 默认cover或line宽度和titleView一样 当设置 scrollTitle=NO 时 设置此属性为YES会适应文字宽度 默认为NO */
 @property (assign, nonatomic, getter=isAdjustCoverOrLineWidth) BOOL adjustCoverOrLineWidth;
 
-/** 是否自动调整标题的宽度, 当设置为YES的时候 如果所有的标题的宽度之和小于segmentView的宽度的时候, 会自动调整title的位置, 达到类似"平分"的效果 默认为NO */
+/** 是否自动调整标题的宽度 当设置为YES的时候 如果所有的标题的宽度之和小于segmentView的宽度的时候 会自动调整title的位置 达到类似"平分"的效果 默认为NO */
 @property (assign, nonatomic, getter=isAutoAdjustTitlesWidth) BOOL autoAdjustTitlesWidth;
 
 /** 是否在开始滚动的时候就调整标题栏 默认为NO */

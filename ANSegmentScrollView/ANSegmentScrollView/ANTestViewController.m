@@ -35,11 +35,12 @@ ANSegmentScrollViewDelegate
     self.title = @"ANSegmentScrollView";
     self.view.backgroundColor = [UIColor whiteColor];
     ANSegmentScrollStyle *style = [[ANSegmentScrollStyle alloc] init];
-    style.showLine = NO;
+    style.showLine = YES;
     style.showCover = NO;
     style.scaleTitle = YES;
     style.scrollTitle = NO;
     style.adjustCoverOrLineWidth = YES;
+    style.gradualChangeTitleColor = YES;
     style.refreshPosition = PullToRefreshPositionParentTop;
     UIView *header = [[UIView alloc] init];
     header.backgroundColor = [UIColor purpleColor];

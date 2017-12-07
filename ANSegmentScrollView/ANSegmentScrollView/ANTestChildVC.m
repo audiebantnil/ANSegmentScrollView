@@ -7,6 +7,7 @@
 //
 
 #import "ANTestChildVC.h"
+#import <MJRefresh/MJRefresh.h>
 
 @interface ANTestChildVC ()
 <
@@ -23,6 +24,14 @@ UITableViewDelegate
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view addSubview:self.tableView];
+    __weak __typeof(self) weakSelf = self;
+    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
+        NSLog(@"%@控制器开始刷新 - 控制器序号为%ld", strongSelf.tableView, (long)strongSelf.index);
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [strongSelf.tableView.mj_header endRefreshing];
+        });
+    }];
 //    NSLog(@"%s -> %ld", __FUNCTION__, (long)self.index);
 }
 
@@ -89,7 +98,6 @@ UITableViewDelegate
         _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
         _tableView.dataSource = self;
         _tableView.delegate = self;
-        _tableView.showsVerticalScrollIndicator = NO;
     }
     return _tableView;
 }
