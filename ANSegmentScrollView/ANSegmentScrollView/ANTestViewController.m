@@ -41,6 +41,7 @@ ANSegmentScrollViewDelegate
     style.scrollTitle = NO;
     style.adjustCoverOrLineWidth = YES;
     style.gradualChangeTitleColor = YES;
+    style.scrollLineSticky = YES;
     style.refreshPosition = PullToRefreshPositionParentTop;
     UIView *header = [[UIView alloc] init];
     header.backgroundColor = [UIColor purpleColor];

@@ -335,7 +335,26 @@ UIScrollViewDelegate
     CGFloat wDistance = currentTitleView.frame.size.width - oldTitleView.frame.size.width;
     if (self.scrollLine) { // 设置下划线
         CGRect lineFrame = self.scrollLine.frame;
-        if (self.style.isScrollTitle && self.style.isAdjustCoverOrLineWidth) { // 标题可滚动 且 滑动过程中下划线宽度有变化
+        if (self.style.isScrollLineSticky) { // 下划线粘滞
+            CGFloat originX = self.scrollLineOrCoverX + oldTitleView.frame.origin.x;
+            if (xDistance >= 0) { // 向左拖拽
+                if (progress < 0.5) {
+                    lineFrame.origin.x = originX;
+                    lineFrame.size.width = self.scrollLineOrCoverWidth + xDistance * progress * 2;
+                } else {
+                    lineFrame.origin.x = originX + xDistance * (progress-0.5) * 2;
+                    lineFrame.size.width = self.scrollLineOrCoverWidth + xDistance - xDistance * (progress-0.5) * 2;
+                }
+            } else { // 向右拖拽
+                if (progress < 0.5) {
+                    lineFrame.origin.x = originX + xDistance * progress * 2;
+                    lineFrame.size.width = self.scrollLineOrCoverWidth - xDistance * progress * 2;
+                } else {
+                    lineFrame.origin.x = originX + xDistance;
+                    lineFrame.size.width = self.scrollLineOrCoverWidth - xDistance + xDistance * (progress-0.5) * 2;
+                }
+            }
+        } else if (self.style.isScrollTitle && self.style.isAdjustCoverOrLineWidth) { // 标题可滚动 且 适应文字宽度
             CGFloat oldScrollLineW = [self.titleWidths[oldIndex] floatValue];
             CGFloat currentScrollLineW = [self.titleWidths[currentIndex] floatValue];
             wDistance = currentScrollLineW - oldScrollLineW;
@@ -344,7 +363,7 @@ UIScrollViewDelegate
             xDistance = currentScrollLineX - oldScrollLineX;
             lineFrame.origin.x = oldScrollLineX + xDistance * progress;
             lineFrame.size.width = oldScrollLineW + wDistance * progress;
-        } else { // 标题不可滑动 或 滚动过程中宽度不变
+        } else { // 标题不可滑动 或 不需要适应文字宽度
             lineFrame.size.width = self.scrollLineOrCoverWidth + wDistance * progress;
             lineFrame.origin.x = self.scrollLineOrCoverX + oldTitleView.frame.origin.x + xDistance * progress;
         }
@@ -352,7 +371,7 @@ UIScrollViewDelegate
     }
     if (self.coverLayer) { // 设置遮盖层
         CGRect coverFrame = self.coverLayer.frame;
-        if (self.style.isScrollTitle && self.style.isAdjustCoverOrLineWidth) { // 标题可滚动 且 滑动过程中遮盖层宽度有变化
+        if (self.style.isScrollTitle && self.style.isAdjustCoverOrLineWidth) { // 标题可滚动 且 适应文字宽度
             CGFloat oldCoverW = [self.titleWidths[oldIndex] floatValue];
             CGFloat currentCoverW = [self.titleWidths[currentIndex] floatValue];
             wDistance = currentCoverW - oldCoverW;
@@ -361,7 +380,7 @@ UIScrollViewDelegate
             xDistance = currentCoverX - oldCoverX;
             coverFrame.size.width = oldCoverW + wDistance * progress;
             coverFrame.origin.x = oldCoverX + xDistance * progress;
-        } else { // 标题不可滑动 或 滚动过程中宽度不变
+        } else { // 标题不可滑动 或 不需要适应文字宽度
             coverFrame.size.width = self.scrollLineOrCoverWidth + wDistance * progress;
             coverFrame.origin.x = self.scrollLineOrCoverX + oldTitleView.frame.origin.x + xDistance * progress;
         }

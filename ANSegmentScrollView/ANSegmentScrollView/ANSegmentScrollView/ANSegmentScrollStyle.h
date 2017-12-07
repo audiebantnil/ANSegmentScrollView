@@ -68,6 +68,9 @@ typedef void(^ExtraButtonClickBlock)(UIButton *extraButton);
 /** 是否在开始滚动的时候就调整标题栏 默认为NO */
 @property (assign, nonatomic, getter=isAdjustTitleWhenBeginDrag) BOOL adjustTitleWhenBeginDrag;
 
+/** 是否下划线粘滞 默认为NO */
+@property (assign, nonatomic, getter=isScrollLineSticky) BOOL scrollLineSticky;
+
 /** ANSegmentMenu的高度 */
 @property (assign, nonatomic) CGFloat segmentHeight;
 
